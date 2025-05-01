@@ -19,13 +19,14 @@ def get_db():
 class ReedCreate(BaseModel):
     name: str
     notes: str = ""
+    cane_type: str = ""  # <-- NEW FIELD
 
 class ReedUpdate(BaseModel):
     notes: str
 
 @app.post("/reeds/")
 def create_reed(reed: ReedCreate, db: Session = Depends(get_db)):
-    db_reed = Reed(name=reed.name, notes=reed.notes)
+    db_reed = Reed(name=reed.name, notes=reed.notes, cane_type=reed.cane_type)
     db.add(db_reed)
     db.commit()
     db.refresh(db_reed)

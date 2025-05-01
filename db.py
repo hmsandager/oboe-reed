@@ -18,5 +18,6 @@ class Reed(Base):
     name = Column(String, index=True)
     created_at = Column(Date, default=datetime.date.today)
     notes = Column(Text, default="")
+    cane_type = Column(String, default="")  # <-- NEW FIELD
 
 Base.metadata.create_all(bind=engine)
