@@ -13,10 +13,16 @@ st.title("🎵 Oboe Reed Logger")
 st.header("Add a New Reed")
 name = st.text_input("Reed name")
 notes = st.text_area("Initial notes")
+cane_type = st.text_input("Cane type")  # <-- NEW FIELD
+
 if st.button("Save Reed"):
-    r = requests.post(f"{API_URL}/reeds/", json={"name": name, "notes": notes})
+    r = requests.post(
+        f"{API_URL}/reeds/",
+        json={"name": name, "notes": notes, "cane_type": cane_type},
+    )
     if r.status_code == 200:
         st.success("Reed saved")
+
 
 st.header("Existing Reeds")
 reeds = requests.get(f"{API_URL}/reeds/").json()
