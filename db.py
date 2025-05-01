@@ -6,9 +6,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
 
-DATABASE_URL = "sqlite:///./reeds.db"
+DATABASE_URL = "postgresql://neondb_owner:npg_dOCgM2wvQGA9@ep-super-dream-a2yn9kew-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"
 
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
