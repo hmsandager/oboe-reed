@@ -5,7 +5,7 @@ import streamlit as st
 import requests
 
 #API_URL = "http://localhost:8000"
-API_URL = st.secrets["API_URL"]
+API_URL = "https://your-api-name.up.railway.app"
 
 
 st.title("🎵 Oboe Reed Logger")
