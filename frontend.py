@@ -72,7 +72,7 @@ for reed in reeds:
             res = requests.delete(f"{API_URL}/reeds/{reed['id']}/")
             if res.status_code == 200:
                 st.success("Reed deleted — refresh to update")
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.error("Failed to delete reed")
 
