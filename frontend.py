@@ -112,18 +112,20 @@ else:
             
 
             if st.button("Save Changes", key=f"btn_save_{reed['id']}"):
+                # When building the update_data dict
                 update_data = {
-                    "instrument": instrument,
-                    "cane_type": cane_type,
-                    "shape": shape,
-                    "staple": staple,
-                    "gouge": gouge,
-                    "reed_length": reed_length,
-                    "density": density,
-                    "scrape": scrape,
-                    "notes": notes,
-                    "quality": quality
+                    "instrument": instrument or "",
+                    "cane_type": cane_type or "",
+                    "shape": shape or "",
+                    "staple": staple or "",
+                    "gouge": gouge or "",
+                    "reed_length": reed_length or "",
+                    "density": density or "",
+                    "scrape": scrape or "",
+                    "notes": notes or "",
+                    "quality": quality or ""
                 }
+
                 res = requests.put(f"{API_URL}/reeds/{reed['id']}/", json=update_data)
                 if res.status_code == 200:
                     st.success("Reed updated")
