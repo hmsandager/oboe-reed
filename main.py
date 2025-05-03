@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from db import Reed, SessionLocal
 from sqlalchemy.orm import Session
 import datetime
+from fastapi import HTTPException
 
 app = FastAPI()
 
@@ -18,8 +19,13 @@ def get_db():
 
 class ReedCreate(BaseModel):
     name: str
+    instrument: str
+    cane_type: str = ""
+    shape: str = ""
+    staple: str = ""
+    gouge: str = ""
+    scrape: str = ""
     notes: str = ""
-    cane_type: str = ""  # <-- NEW FIELD
 
 class ReedUpdate(BaseModel):
     notes: str
@@ -44,3 +50,12 @@ def add_note(reed_id: int, update: ReedUpdate, db: Session = Depends(get_db)):
     reed.notes += f"\n{datetime.date.today()}: {update.notes}"
     db.commit()
     return reed
+
+@app.delete("/reeds/{reed_id}/")
+def delete_reed(reed_id: int, db: Session = Depends(get_db)):
+    reed = db.query(Reed).filter(Reed.id == reed_id).first()
+    if not reed:
+        raise HTTPException(status_code=404, detail="Reed not found")
+    db.delete(reed)
+    db.commit()
+    return {"message": "Reed deleted"}
