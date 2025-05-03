@@ -18,7 +18,7 @@ class Reed(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     created_at = Column(Date, default=datetime.date.today)
-    
+
     notes = Column(Text, default="")
     cane_type = Column(String, default="")  # <-- NEW FIELD
     instrument = Column(String)
@@ -27,5 +27,8 @@ class Reed(Base):
     gouge = Column(String)
     scrape = Column(String)
     notes = Column(String)
+    density = Column(String)
+    reed_length = Column(String)
+    quality = Column(String)
 
 Base.metadata.create_all(bind=engine)

@@ -24,8 +24,11 @@ class ReedCreate(BaseModel):
     shape: str = ""
     staple: str = ""
     gouge: str = ""
+    reed_length: str = ""
+    density: str = ""
     scrape: str = ""
     notes: str = ""
+    quality: str = ""
 
 class ReedUpdate(BaseModel):
     notes: str
@@ -34,7 +37,8 @@ class ReedUpdate(BaseModel):
 def create_reed(reed: ReedCreate, db: Session = Depends(get_db)):
     db_reed = Reed(name=reed.name, notes=reed.notes, cane_type=reed.cane_type,
                    instrument = reed.instrument, shape = reed.shape, staple = reed.staple,
-                   gouge = reed.gouge, scrape = reed.scrape)
+                   gouge = reed.gouge, scrape = reed.scrape, reed_length = reed.reed_length,
+                   density = reed.density, quality = reed.quality)
     db.add(db_reed)
     db.commit()
     db.refresh(db_reed)

@@ -23,8 +23,11 @@ cane_type = st.text_input("Cane type")
 shape = st.text_input("Shape")
 staple = st.text_input('Staple')
 gouge = st.text_input('Gouge')
-scrape = st.text_input('Scrape')
+reed_length = st.text_input('Reed length')
+density = st.text_input('Cane density')
+scrape = st.text_area('Scrape')
 notes = st.text_area("Other notes")
+quality = st.text_area('Describe how the reed plays')
 
 if st.button("Save Reed"):
     r = requests.post(
@@ -36,8 +39,11 @@ if st.button("Save Reed"):
             "shape": shape,
             "staple": staple,
             "gouge": gouge,
+            'reed_length': reed_length,
+            "density": density,
             "scrape": scrape,
-            "notes": notes
+            "notes": notes,
+            "quality": quality
         },
     )
     if r.status_code == 200:
