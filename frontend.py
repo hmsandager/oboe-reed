@@ -75,6 +75,3 @@ for reed in reeds:
                 st.rerun()
             else:
                 st.error("Failed to delete reed")
-
-
-
