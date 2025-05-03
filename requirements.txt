@@ -8,3 +8,4 @@ pydantic
 streamlit
 requests
 psycopg2-binary
+dotenv
