@@ -104,8 +104,12 @@ else:
             shape = st.text_input("Shape", reed.get('shape', ''), key=f"shape_{reed['id']}")
             staple = st.text_input("Staple", reed.get('staple', ''), key=f"staple_{reed['id']}")
             gouge = st.text_input("Gouge", reed.get('gouge', ''), key=f"gouge_{reed['id']}")
-            scrape = st.text_input("Scrape", reed.get('scrape', ''), key=f"scrape_{reed['id']}")
+            reed_length = st.text_input('Reed length', reed.get('reed_length', ''), key=f"reed_length_{reed['id']}")
+            density = st.text_input('Cane density', reed.get('density', ''), key=f"density_{reed['id']}")
+            scrape = st.text_area("Scrape", reed.get('scrape', ''), key=f"scrape_{reed['id']}")
             notes = st.text_area("Notes", reed.get('notes', ''), key=f"notes_{reed['id']}")
+            quality = st.text_area("Describe how the reed plays", reed.get('quality', ''), key=f"quality_{reed['id']}")
+            
 
             if st.button("Save Changes", key=f"btn_save_{reed['id']}"):
                 update_data = {
@@ -114,8 +118,11 @@ else:
                     "shape": shape,
                     "staple": staple,
                     "gouge": gouge,
+                    "reed_length": reed_length,
+                    "density": density,
                     "scrape": scrape,
-                    "notes": notes
+                    "notes": notes,
+                    "quality": quality
                 }
                 res = requests.put(f"{API_URL}/reeds/{reed['id']}/", json=update_data)
                 if res.status_code == 200:
