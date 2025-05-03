@@ -32,7 +32,9 @@ class ReedUpdate(BaseModel):
 
 @app.post("/reeds/")
 def create_reed(reed: ReedCreate, db: Session = Depends(get_db)):
-    db_reed = Reed(name=reed.name, notes=reed.notes, cane_type=reed.cane_type)
+    db_reed = Reed(name=reed.name, notes=reed.notes, cane_type=reed.cane_type,
+                   instrument = reed.instrument, shape = reed.shape, staple = reed.staple,
+                   gouge = reed.gouge, scrape = reed.scrape)
     db.add(db_reed)
     db.commit()
     db.refresh(db_reed)
@@ -59,3 +61,26 @@ def delete_reed(reed_id: int, db: Session = Depends(get_db)):
     db.delete(reed)
     db.commit()
     return {"message": "Reed deleted"}
+
+
+class ReedEdit(BaseModel):
+    instrument: str = ""
+    cane_type: str = ""
+    shape: str = ""
+    staple: str = ""
+    gouge: str = ""
+    scrape: str = ""
+    notes: str = ""
+
+@app.put("/reeds/{reed_id}/")
+def update_reed(reed_id: int, reed_update: ReedEdit, db: Session = Depends(get_db)):
+    reed = db.query(Reed).filter(Reed.id == reed_id).first()
+    if not reed:
+        raise HTTPException(status_code=404, detail="Reed not found")
+
+    for field, value in reed_update.dict().items():
+        setattr(reed, field, value)
+
+    db.commit()
+    db.refresh(reed)
+    return reed
