@@ -73,8 +73,12 @@ class ReedEdit(BaseModel):
     shape: str = ""
     staple: str = ""
     gouge: str = ""
+    reed_length: str = ""  
+    density: str = ""      
     scrape: str = ""
     notes: str = ""
+    quality: str = ""      
+
 
 @app.put("/reeds/{reed_id}/")
 def update_reed(reed_id: int, reed_update: ReedEdit, db: Session = Depends(get_db)):
@@ -82,7 +86,7 @@ def update_reed(reed_id: int, reed_update: ReedEdit, db: Session = Depends(get_d
     if not reed:
         raise HTTPException(status_code=404, detail="Reed not found")
 
-    for field, value in reed_update.dict().items():
+    for field, value in reed_update.model_dump().items():
         setattr(reed, field, value)
 
     db.commit()
