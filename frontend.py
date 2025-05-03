@@ -51,21 +51,40 @@ if st.button("Save Reed"):
 
 st.header("Existing Reeds")
 
-# Step 1: Get reeds from the API
+# Step 1: Fetch all reeds
 reeds = requests.get(f"{API_URL}/reeds/").json()
 
-# Step 2: Group reeds by year and month
+# Step 2: Parse dates and group reeds by (year, month)
 grouped_reeds = defaultdict(list)
-for reed in reeds:
-    created_str = reed['created_at']
-    created_date = datetime.datetime.fromisoformat(created_str)
-    month_key = created_date.strftime("%Y-%m")  # e.g., "2024-11"
-    grouped_reeds[month_key].append(reed)
+years = set()
+months = set()
 
-# Step 3: Display reeds grouped by month
-for month in sorted(grouped_reeds.keys(), reverse=True):
-    st.subheader(f"Created in {month}")
-    for reed in grouped_reeds[month]:
+for reed in reeds:
+    created_date = datetime.datetime.fromisoformat(reed['created_at'])
+    year = created_date.year
+    month = created_date.month
+    years.add(year)
+    months.add(month)
+    grouped_reeds[(year, month)].append(reed)
+
+# Step 3: Create dropdowns
+current_date = datetime.datetime.now()
+selected_year = st.selectbox("Select Year", sorted(years, reverse=True), index=0)
+selected_month = st.selectbox(
+    "Select Month",
+    sorted(months),
+    index=sorted(months).index(current_date.month) if current_date.month in months else 0,
+    format_func=lambda m: datetime.date(1900, m, 1).strftime('%B')  # show "January", etc.
+)
+
+# Step 4: Filter and display reeds
+selected_reeds = grouped_reeds.get((selected_year, selected_month), [])
+st.subheader(f"Reeds created in {datetime.date(1900, selected_month, 1).strftime('%B')} {selected_year}")
+
+if not selected_reeds:
+    st.info("No reeds found for this month.")
+else:
+    for reed in selected_reeds:
         with st.expander(reed['name']):
             st.write(f"Created: {reed['created_at']}")
 
@@ -105,4 +124,3 @@ for month in sorted(grouped_reeds.keys(), reverse=True):
                     st.rerun()
                 else:
                     st.error("Failed to delete reed")
-
