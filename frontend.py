@@ -129,6 +129,9 @@ else:
                     st.success("Reed updated")
                 else:
                     st.error("Update failed")
+                    st.text(f"Status: {res.status_code}")
+                    st.text(f"Response: {res.text}")
+
 
             if st.button("Delete Reed", key=f"delete_{reed['id']}"):
                 res = requests.delete(f"{API_URL}/reeds/{reed['id']}/")
