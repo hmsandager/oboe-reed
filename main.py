@@ -86,7 +86,7 @@ def update_reed(reed_id: int, reed_update: ReedEdit, db: Session = Depends(get_d
     if not reed:
         raise HTTPException(status_code=404, detail="Reed not found")
 
-    for field, value in reed_update.model_dump().items():
+    for field, value in reed_update.dict().items():
         setattr(reed, field, value)
 
     db.commit()
