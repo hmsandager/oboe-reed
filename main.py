@@ -18,6 +18,7 @@ def get_db():
         db.close()
 
 class ReedCreate(BaseModel):
+    user_id: str  
     name: str
     instrument: str
     cane_type: str = ""
@@ -35,7 +36,7 @@ class ReedUpdate(BaseModel):
 
 @app.post("/reeds/")
 def create_reed(reed: ReedCreate, db: Session = Depends(get_db)):
-    db_reed = Reed(name=reed.name, notes=reed.notes, cane_type=reed.cane_type,
+    db_reed = Reed(user_id=reed.user_id, name=reed.name, notes=reed.notes, cane_type=reed.cane_type,
                    instrument = reed.instrument, shape = reed.shape, staple = reed.staple,
                    gouge = reed.gouge, scrape = reed.scrape, reed_length = reed.reed_length,
                    density = reed.density, quality = reed.quality)
@@ -45,8 +46,8 @@ def create_reed(reed: ReedCreate, db: Session = Depends(get_db)):
     return db_reed
 
 @app.get("/reeds/")
-def list_reeds(db: Session = Depends(get_db)):
-    return db.query(Reed).all()
+def list_reeds(user_id: str, db: Session = Depends(get_db)):
+    return db.query(Reed).filter(Reed.user_id == user_id).all()
 
 @app.post("/reeds/{reed_id}/add_note")
 def add_note(reed_id: int, update: ReedUpdate, db: Session = Depends(get_db)):
@@ -68,6 +69,7 @@ def delete_reed(reed_id: int, db: Session = Depends(get_db)):
 
 
 class ReedEdit(BaseModel):
+    user_id: str = ""
     instrument: str = ""
     cane_type: str = ""
     shape: str = ""

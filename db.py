@@ -15,8 +15,9 @@ Base = declarative_base()
 
 class Reed(Base):
     __tablename__ = "reeds"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
+    id = Column(Integer, primary_key=True)
+    user_id = Column(String, index=True)  # <-- Add this
+    name = Column(String)
     created_at = Column(Date, default=datetime.date.today)
 
     cane_type = Column(String, default="")  # <-- NEW FIELD

@@ -12,6 +12,10 @@ API_URL = "https://oboe-reed-production.up.railway.app"
 
 st.title("🎵 Oboe Reed Logger")
 
+st.sidebar.header("Select User")
+user_options = ["Hans Martin", "Person 2"]
+user_id = st.sidebar.selectbox("User", user_options)
+
 st.header("Add a New Reed")
 name = st.text_input("Reed number")
 instrument = st.selectbox(
@@ -33,6 +37,7 @@ if st.button("Save Reed"):
     r = requests.post(
         f"{API_URL}/reeds/",
         json={
+            "user_id": user_id,
             "name": name,
             "instrument": instrument,
             "cane_type": cane_type,
@@ -58,7 +63,7 @@ if st.button("Save Reed"):
 st.header("Existing Reeds")
 
 # Step 1: Fetch all reeds
-reeds = requests.get(f"{API_URL}/reeds/").json()
+reeds = requests.get(f"{API_URL}/reeds/", params={"user_id": user_id}).json()
 
 # Step 2: Parse dates and group reeds by (year, month)
 grouped_reeds = defaultdict(list)
@@ -84,7 +89,11 @@ selected_month = st.selectbox(
 )
 
 # Step 4: Filter and display reeds
-selected_reeds = grouped_reeds.get((selected_year, selected_month), [])
+selected_reeds = sorted(
+    grouped_reeds.get((selected_year, selected_month), []),
+    key=lambda r: datetime.datetime.fromisoformat(r['created_at'])
+)
+
 st.subheader(f"Reeds created in {datetime.date(1900, selected_month, 1).strftime('%B')} {selected_year}")
 
 if not selected_reeds:
@@ -114,6 +123,7 @@ else:
             if st.button("Save Changes", key=f"btn_save_{reed['id']}"):
                 # When building the update_data dict
                 update_data = {
+                    "user_id": user_id,
                     "instrument": instrument or "",
                     "cane_type": cane_type or "",
                     "shape": shape or "",
