@@ -69,12 +69,12 @@ for reed in reeds:
                 st.success("Note added")
         
         if st.button("Delete Reed", key=f"delete_{reed['id']}"):
-            confirm = st.warning(f"Are you sure you want to delete {reed['name']}?")
-            if st.button("Confirm Delete", key=f"confirm_delete_{reed['id']}"):
-                res = requests.delete(f"{API_URL}/reeds/{reed['id']}/")
-                if res.status_code == 200:
-                    st.success("Reed deleted — refresh to update")
-                else:
-                    st.error("Failed to delete reed")
+            res = requests.delete(f"{API_URL}/reeds/{reed['id']}/")
+            if res.status_code == 200:
+                st.success("Reed deleted — refresh to update")
+                st.experimental_rerun()
+            else:
+                st.error("Failed to delete reed")
+
 
 
