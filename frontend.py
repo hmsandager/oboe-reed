@@ -12,19 +12,32 @@ API_URL = "https://oboe-reed-production.up.railway.app"
 
 st.title("🎵 Oboe Reed Logger")
 
-st.sidebar.header("Login")
-
+# Check login status
 if "user_id" not in st.session_state:
-    username = st.sidebar.text_input("Username")
-    password = st.sidebar.text_input("Password", type="password")
-    if st.sidebar.button("Login"):
-        res = requests.post(f"{API_URL}/login/", json={"username": username, "password": password})
+    st.title("🎵 Oboe Reed Logger — Login")
+
+    # Fetch users for dropdown
+    user_response = requests.get(f"{API_URL}/users/")
+    if user_response.status_code == 200:
+        user_ids = [u["user_id"] for u in user_response.json()]
+        selected_user = st.selectbox("Select your username", user_ids)
+    else:
+        st.error("Could not load users")
+        st.stop()
+
+    password = st.text_input("Password", type="password")
+
+    if st.button("Login"):
+        res = requests.post(f"{API_URL}/login/", json={"user_id": selected_user, "password": password})
         if res.status_code == 200:
             st.session_state["user_id"] = res.json()["user_id"]
-            st.success("Logged in!")
-            st.rerun()
+            st.success("Login successful! Reloading...")
+            st.experimental_rerun()
         else:
             st.error("Login failed")
+
+    st.stop()  # 👈 This stops the rest of the app from loading
+
 
 
 

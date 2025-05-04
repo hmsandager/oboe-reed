@@ -20,15 +20,22 @@ def get_db():
 
 
 class LoginData(BaseModel):
-    username: str
+    user_id: str
     password: str
+
+@app.get("/users/")
+def list_users(db: Session = Depends(get_db)):
+    users = db.query(User).all()
+    return [{"user_id": user.user_id} for user in users]
+
 
 @app.post("/login/")
 def login(data: LoginData, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.username == data.username).first()
-    if not user or not bcrypt.checkpw(data.password.encode('utf-8'), user.hashed_password.encode('utf-8')):
+    user = db.query(User).filter(User.user_id == data.user_id).first()
+    if not user or not bcrypt.checkpw(data.password.encode(), user.hashed_password.encode()):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    return {"user_id": user.id}
+    return {"user_id": user.user_id}
+
 
 
 class ReedCreate(BaseModel):
