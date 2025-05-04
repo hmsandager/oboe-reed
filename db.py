@@ -13,14 +13,14 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+# Reed table
 class Reed(Base):
     __tablename__ = "reeds"
     id = Column(Integer, primary_key=True)
-    user_id = Column(String, index=True)  # <-- Add this
+    user_id = Column(String, index=True)
     name = Column(String)
     created_at = Column(Date, default=datetime.date.today)
-
-    cane_type = Column(String, default="")  # <-- NEW FIELD
+    cane_type = Column(String, default="")
     instrument = Column(String)
     shape = Column(String)
     staple = Column(String)
@@ -31,4 +31,13 @@ class Reed(Base):
     reed_length = Column(String)
     quality = Column(String)
 
+# 👤 User table
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
+
+# Create both tables
 Base.metadata.create_all(bind=engine)
+

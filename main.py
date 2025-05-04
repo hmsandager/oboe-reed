@@ -3,10 +3,11 @@
 # ==========================
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
-from db import Reed, SessionLocal
+from db import Reed, User, SessionLocal
 from sqlalchemy.orm import Session
 import datetime
 from fastapi import HTTPException
+import bcrypt
 
 app = FastAPI()
 
@@ -16,6 +17,19 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+class LoginData(BaseModel):
+    username: str
+    password: str
+
+@app.post("/login/")
+def login(data: LoginData, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.username == data.username).first()
+    if not user or not bcrypt.checkpw(data.password.encode('utf-8'), user.hashed_password.encode('utf-8')):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    return {"user_id": user.id}
+
 
 class ReedCreate(BaseModel):
     user_id: str  
