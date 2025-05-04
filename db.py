@@ -34,9 +34,9 @@ class Reed(Base):
 # 👤 User table
 class User(Base):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
+    user_id = Column(String, primary_key=True, index=True)  # acts as username
     hashed_password = Column(String)
+
 
 # Create both tables
 Base.metadata.create_all(bind=engine)
