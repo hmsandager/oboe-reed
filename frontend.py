@@ -10,8 +10,6 @@ from collections import defaultdict
 API_URL = "https://oboe-reed-production.up.railway.app"
 
 
-st.title("🎵 Oboe Reed Logger")
-
 # Check login status
 if "user_id" not in st.session_state:
     st.title("🎵 Oboe Reed Logger — Login")
@@ -32,14 +30,14 @@ if "user_id" not in st.session_state:
         if res.status_code == 200:
             st.session_state["user_id"] = res.json()["user_id"]
             st.success("Login successful! Reloading...")
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("Login failed")
 
     st.stop()  # 👈 This stops the rest of the app from loading
 
 
-
+st.title("🎵 Oboe Reed Logger")
 
 st.header("Add a New Reed")
 name = st.text_input("Reed number")
